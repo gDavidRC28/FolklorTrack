@@ -3,7 +3,7 @@
 **FolklorTrack** es una aplicación móvil desarrollada en React Native que permite la gestión integral de un club de danza folclórica. Con ella, podrás administrar eficientemente a tus alumnos, vestuario, eventos y estados, todo desde la palma de tu mano.
 
 <p align="center">
-  <img src="ruta/a/la/imagen/logo.png" alt="Logo de FolklorTrack" width="200"/>
+  <img src="/assets/Bailarines.jpg" alt="Logo de FolklorTrack" width="200"/>
 </p>
 
 ## Funcionalidades
