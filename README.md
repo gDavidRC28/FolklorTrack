@@ -5,7 +5,10 @@
 <p align="center">
   <img src="/assets/Bailarines.jpg" alt="Logo de FolklorTrack" width="200"/>
 </p>
-
+##Correo para pruebas 
+  testeo@gmail.com
+##Contraseña
+  test1234
 ## Funcionalidades
 
 * **Gestión de Alumnos:**
