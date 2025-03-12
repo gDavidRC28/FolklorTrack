@@ -1,26 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from "react-native";
-import { getAuth, signOut } from "firebase/auth";
-import appFirebase from "../firebaseConfig";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { handleLogout } from "../viewmodels/Autenticacion"; // Importamos la lógica desde el ViewModel
 
 export default function Catalogo(props) {
-  const handleLogout = () => {
-    const auth = getAuth(appFirebase);
-
-    signOut(auth)
-      .then(() => {
-        // Cierre de sesión exitoso
-        Alert.alert("Éxito", "Has cerrado sesión exitosamente");
-        props.navigation.navigate("Login"); // Redirigir al Login
-      })
-      .catch((error) => {
-        // Manejar errores de cierre de sesión
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        Alert.alert("Error", `Código: ${errorCode}\nMensaje: ${errorMessage}`);
-      });
-  };
-
   return (
     <View style={styles.container}>
       {/* Catálogo */}
@@ -62,7 +44,7 @@ export default function Catalogo(props) {
       {/* Botón de Cerrar Sesión */}
       <TouchableOpacity
         style={styles.logoutButton}
-        onPress={handleLogout}
+        onPress={() => handleLogout(props.navigation)} 
       >
         <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
       </TouchableOpacity>

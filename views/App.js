@@ -3,7 +3,7 @@ import AppNavigator from './navigation/AppNavigator';
 import funcionesApp from './viewmodels/funcionesApp';
 
 export default function App() {
-  funcionesApp(); //Permisos
+  funcionesApp(); // Manejo de permisos
 
   return <AppNavigator />;
 }

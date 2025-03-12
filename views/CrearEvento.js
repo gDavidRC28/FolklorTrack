@@ -1,52 +1,22 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import React from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { getFirestore, collection, addDoc } from 'firebase/firestore'; // Importar Firestore
-import appFirebase from '../firebaseConfig'; // Asegúrate de tener la configuración de Firebase
+import funcionesCrearEvento from '../viewmodels/funcionesCrearEvento';
 
 const CrearEvento = (props) => {
-  const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [titulo, setTitulo] = useState('');
-  const [detalles, setDetalles] = useState('');
-  const [lugar, setLugar] = useState('');
-
-  const handleDateChange = (event, selectedDate) => {
-    setShowDatePicker(false);
-    if (selectedDate) {
-      setDate(selectedDate);
-    }
-  };
-
-  const handleGuardarEvento = async () => {
-    if (!titulo || !detalles || !lugar) {
-      Alert.alert('Error', 'Por favor, complete todos los campos.');
-      return;
-    }
-
-    try {
-      const db = getFirestore(appFirebase);
-      const eventosCollection = collection(db, 'Eventos');
-
-      // Crea un nuevo evento en Firestore
-      await addDoc(eventosCollection, {
-        Titulo: titulo,
-        Detalles: detalles,
-        Fecha: new Date(date),
-        Lugar: lugar, 
-      });
-
-      Alert.alert('Éxito', 'Evento guardado correctamente');
-      setTitulo('');
-      setLugar('');
-      setDetalles('');
-      setDate(new Date());
-      props.navigation.goBack(); 
-    } catch (error) {
-      console.error('Error al guardar el evento:', error);
-      Alert.alert('Error', 'No se pudo guardar el evento.');
-    }
-  };
+  const {
+    titulo,
+    setTitulo,
+    detalles,
+    setDetalles,
+    lugar,
+    setLugar,
+    date,
+    showDatePicker,
+    setShowDatePicker,
+    handleDateChange,
+    handleGuardarEvento,
+  } = funcionesCrearEvento();
 
   return (
     <View style={styles.container}>

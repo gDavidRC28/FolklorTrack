@@ -1,37 +1,13 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Alert } from "react-native";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import appFirebase from "../firebaseConfig";
+import React from "react";
+import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from "react-native";
+import funcionesLogin from "../viewmodels/funcionesLogin";
 
-export default function Login(props) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = () => {
-    const auth = getAuth(appFirebase);
-
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Inicio de sesión exitoso
-        const user = userCredential.user;
-        Alert.alert("Éxito", "Inicio de sesión exitoso");
-        props.navigation.navigate("Catalogo"); // Navegar al catálogo
-      })
-      .catch((error) => {
-        // Manejar errores
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        Alert.alert("Error", `Código: ${errorCode}\nMensaje: ${errorMessage}`);
-      });
-  };
+export default function Login({ navigation }) {
+  const { email, setEmail, password, setPassword, handleLogin } = funcionesLogin(navigation);
 
   return (
     <View style={styles.container}>
-      <Image
-        source={require("../assets/Bailarines.jpg")}
-        style={styles.image}
-        resizeMode="contain"
-      />
+      <Image source={require("../assets/Bailarines.jpg")} style={styles.image} resizeMode="contain" />
       <Text style={styles.title}>Entrar</Text>
       <TextInput
         style={styles.input}
@@ -39,7 +15,7 @@ export default function Login(props) {
         placeholderTextColor="#A9A9A9"
         keyboardType="email-address"
         value={email}
-        onChangeText={setEmail} // Actualizar el estado del correo
+        onChangeText={setEmail}
       />
       <TextInput
         style={styles.input}
@@ -47,7 +23,7 @@ export default function Login(props) {
         placeholderTextColor="#A9A9A9"
         secureTextEntry
         value={password}
-        onChangeText={setPassword} // Actualizar el estado de la contraseña
+        onChangeText={setPassword}
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Ingresar</Text>
