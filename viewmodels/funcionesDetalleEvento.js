@@ -19,7 +19,7 @@ export class ServicioDetalleEvento {
   }
 }
 
-export default class FuncionesDetalleEvento {
+export default class funcionesDetalleEvento {
   constructor() {
     this.ServicioDetalleEvento = new ServicioDetalleEvento();
   }
@@ -34,14 +34,21 @@ export default class FuncionesDetalleEvento {
   };
 
   crearEvento(params) {
-    return new ModeloEvento(params.eventoId, params.Titulo, params.Fecha, params.Lugar, params.Detalles);
+    const fecha = params.Fecha && params.Fecha.seconds ? params.Fecha : null;
+    return new ModeloEvento({
+      id: params.eventoId,
+      Titulo: params.Titulo,
+      Fecha: fecha ? fecha : 'Fecha no disponible',
+      Lugar: params.Lugar,
+      Detalles: params.Detalles,
+    });
   }
 
   formatFecha(timestamp) {
     if (!timestamp || !timestamp.seconds) {
       return 'Fecha no disponible';
     }
-    const date = new Date(timestamp.seconds * 1000);
+    const date = new Date(timestamp.seconds * 1000); 
     return date.toLocaleDateString('es-ES', {
       year: 'numeric',
       month: '2-digit',

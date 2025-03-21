@@ -12,10 +12,11 @@ export const obtenerEventos = async () => {
 
     return snapshot.docs.map((doc) => {
       const data = doc.data();
+      const fecha = data.Fecha && data.Fecha.seconds ? data.Fecha : null; 
       return new ModeloEvento({
         id: doc.id,
         Titulo: data.Titulo || 'Título no disponible',
-        Fecha: data.Fecha || 'Fecha no disponible',
+        Fecha: fecha ? fecha : 'Fecha no disponible', 
         Lugar: data.Lugar || 'Lugar no disponible',
         Detalles: data.Detalles || 'Descripción no disponible',
       });
@@ -26,7 +27,7 @@ export const obtenerEventos = async () => {
   }
 };
 
-export default function funcionesEventos() {
+export default function FuncionesEventos() {
   const [eventos, setEventos] = useState([]);
 
   const cargarEventos = async () => {

@@ -9,13 +9,13 @@ const EventComponent = ({ evento, navigation }) => {
       style={styles.card}
       onPress={() => navigation.navigate('DetalleEvento', {
         eventoId: evento.id,
-        Titulo: evento.titulo,
+        Titulo: evento.Titulo,
         Fecha: evento.getFormattedFecha(),
-        Lugar: evento.lugar,
-        Detalles: evento.detalles,
+        Lugar: evento.Lugar,
+        Detalles: evento.Detalles,
       })}
     >
-      <Text style={styles.titulo}>Título: {evento.titulo}</Text>
+      <Text style={styles.titulo}>Título: {evento.Titulo}</Text>
       <Text style={styles.fecha}>Fecha: {evento.getFormattedFecha()}</Text>
     </TouchableOpacity>
   );

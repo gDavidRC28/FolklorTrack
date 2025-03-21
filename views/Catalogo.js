@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import { handleLogout } from "../viewmodels/Autenticacion"; // Importamos la lógica desde el ViewModel
+import { handleLogout } from "../viewmodels/funcionesLogin"; 
 
 export default function Catalogo(props) {
   return (

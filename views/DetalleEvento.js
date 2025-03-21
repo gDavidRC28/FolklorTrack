@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-import { funcionesDetalleEvento } from '../viewmodels/funcionesDetalleEvento';
+import funcionesDetalleEvento from '../viewmodels/funcionesDetalleEvento';
 
 export default function DetalleEvento({ route, navigation }) {
   const obtenerDetalleEvento = new funcionesDetalleEvento();
@@ -29,10 +29,10 @@ export default function DetalleEvento({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Título: {evento.titulo}</Text>
-      <Text style={styles.label}>Fecha: {obtenerDetalleEvento.formatFecha(evento.fecha)}</Text>
-      <Text style={styles.label}>Lugar: {evento.lugar}</Text>
-      <Text style={styles.label}>Detalles: {evento.detalles}</Text>
+      <Text style={styles.label}>Título: {evento.Titulo}</Text>
+      <Text style={styles.label}>Fecha: {obtenerDetalleEvento.formatFecha(evento.Fecha)}</Text>
+      <Text style={styles.label}>Lugar: {evento.Lugar}</Text>
+      <Text style={styles.label}>Detalles: {evento.Detalles}</Text>
 
       <TouchableOpacity style={styles.button} onPress={eliminarEvento}>
         <Text style={styles.buttonText}>Eliminar Evento</Text>
