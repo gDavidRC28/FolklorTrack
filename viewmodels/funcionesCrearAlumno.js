@@ -1,13 +1,25 @@
 import { useState } from 'react';
-import ServicioCrearAlumno from '../services/ServicioCrearAlumno';
-import { Timestamp } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, Timestamp } from 'firebase/firestore';
+import appFirebase from '../firebaseConfig';
+import ModeloAlumno from '../models/ModeloAlumno';
+
+const agregarAlumno = async (alumnoData) => {
+  try {
+    const db = getFirestore(appFirebase);
+    const alumno = new ModeloAlumno(alumnoData);
+    await addDoc(collection(db, 'Alumnos'), { ...alumno });
+  } catch (error) {
+    console.error('Error al agregar alumno:', error);
+    throw error;
+  }
+};
 
 const funcionesCrearAlumno = (navigation) => {
   const [nombre, setNombre] = useState('');
   const [genero, setGenero] = useState('');
   const [edad, setEdad] = useState('');
   const [talla, setTalla] = useState('');
-  const [fechaInicio, setFechaInicio] = useState(Timestamp.fromDate(new Date())); 
+  const [fechaInicio, setFechaInicio] = useState(Timestamp.fromDate(new Date()));
   const [show, setShow] = useState(false);
 
   const handleChangeText = (value, field) => {
@@ -20,18 +32,27 @@ const funcionesCrearAlumno = (navigation) => {
   const handleDateChange = (event, selectedDate) => {
     if (selectedDate) {
       setShow(false);
-      setFechaInicio(selectedDate.toLocaleDateString()); 
+      setFechaInicio(selectedDate.toLocaleDateString());
     }
   };
 
-  const agregarAlumno = async () => {
+  const handleAgregarAlumno = async () => {
     if (!nombre || !fechaInicio || !genero || !edad || !talla) {
       alert('Por favor, complete todos los campos');
       return;
     }
 
     try {
-      await ServicioCrearAlumno.agregarAlumno({ nombre, fecha_inicio: fechaInicio, genero, edad, talla });
+      const nuevoAlumno = new ModeloAlumno({
+        nombre,
+        edad,
+        genero,
+        talla,
+        fecha_inicio: fechaInicio
+      });
+
+      await agregarAlumno(nuevoAlumno);
+
       alert('Alumno agregado correctamente');
       navigation.goBack();
     } catch (error) {
@@ -49,7 +70,7 @@ const funcionesCrearAlumno = (navigation) => {
     setShow,
     handleChangeText,
     handleDateChange,
-    agregarAlumno,
+    handleAgregarAlumno
   };
 };
 

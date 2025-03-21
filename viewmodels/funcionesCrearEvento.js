@@ -1,9 +1,30 @@
 import { useState } from 'react';
 import { Alert } from 'react-native';
-import ModeloCrearEvento from '../models/ModeloCrearEvento';
-import { ServicioCrearEvento } from '../services/SercicioCrearEvento';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import appFirebase from '../firebaseConfig';
+import ModeloEvento from '../models/ModeloEvento';
 
-export default function funcionesCrearEvento() {
+const db = getFirestore(appFirebase);
+
+const ServicioCrearEvento = {
+  addEvento: async (evento) => {
+    try {
+      const eventosCollection = collection(db, 'Eventos');
+      await addDoc(eventosCollection, {
+        Titulo: evento.titulo,
+        Detalles: evento.detalles,
+        Fecha: evento.fecha,
+        Lugar: evento.lugar,
+      });
+      return true;
+    } catch (error) {
+      console.error('Error al guardar evento:', error.message);
+      return false;
+    }
+  },
+};
+
+export default function FuncionesCrearEvento() {
   const [titulo, setTitulo] = useState('');
   const [detalles, setDetalles] = useState('');
   const [lugar, setLugar] = useState('');
@@ -23,7 +44,7 @@ export default function funcionesCrearEvento() {
       return;
     }
 
-    const evento = new ModeloCrearEvento(titulo, detalles, new Date(date), lugar);
+    const evento = new ModeloEvento({ titulo, detalles, fecha: date, lugar });
     const result = await ServicioCrearEvento.addEvento(evento);
     if (result) {
       Alert.alert('Éxito', 'Evento guardado correctamente');

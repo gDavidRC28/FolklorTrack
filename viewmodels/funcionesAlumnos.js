@@ -1,6 +1,22 @@
 import { useState, useEffect } from "react";
-import { obtenerAlumnos } from "../services/ServicioAlumno";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import appFirebase from "../firebaseConfig";
 import Alumno from "../models/ModeloAlumno";
+
+const obtenerAlumnos = async () => {
+  try {
+    const db = getFirestore(appFirebase);
+    const alumnosCollection = collection(db, "Alumnos");
+    const snapshot = await getDocs(alumnosCollection);
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  } catch (error) {
+    console.error("Error al obtener alumnos:", error);
+    throw error;
+  }
+};
 
 const useAlumnos = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -21,6 +37,7 @@ const useAlumnos = () => {
     cargarAlumnos();
   }, []);
 
-  return { alumnos, loading};
+  return { alumnos, loading };
 };
+
 export default useAlumnos;

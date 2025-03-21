@@ -1,6 +1,30 @@
 import { useState } from 'react';
-import { obtenerEventos } from '../services/ServicioEventos';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import appFirebase from '../firebaseConfig';
 import ModeloEvento from '../models/ModeloEvento';
+
+const db = getFirestore(appFirebase);
+
+export const obtenerEventos = async () => {
+  try {
+    const eventosCollection = collection(db, 'Eventos');
+    const snapshot = await getDocs(eventosCollection);
+
+    return snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return new ModeloEvento({
+        id: doc.id,
+        Titulo: data.Titulo || 'Título no disponible',
+        Fecha: data.Fecha || 'Fecha no disponible',
+        Lugar: data.Lugar || 'Lugar no disponible',
+        Detalles: data.Detalles || 'Descripción no disponible',
+      });
+    });
+  } catch (error) {
+    console.error('Error al obtener eventos:', error.message);
+    throw error;
+  }
+};
 
 export default function funcionesEventos() {
   const [eventos, setEventos] = useState([]);
@@ -8,9 +32,9 @@ export default function funcionesEventos() {
   const cargarEventos = async () => {
     try {
       const datosEventos = await obtenerEventos();
-      setEventos(datosEventos.map(e => new ModeloEvento(e.id, e.Titulo, e.Fecha, e.Lugar, e.Detalles)));
+      setEventos(datosEventos);
     } catch (error) {
-      console.error('Error en ViewModel:', error.message);
+      console.error('Error en Eventos:', error.message);
     }
   };
 

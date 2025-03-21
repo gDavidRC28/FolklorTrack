@@ -1,5 +1,5 @@
 export default class Alumno {
-  constructor({ id = "", nombre = "Sin nombre", edad = "Sin edad", talla = "Sin talla", genero = "Sin género", fecha_inicio = "Sin fecha" }) {
+  constructor({ id = "", nombre = "Sin nombre", edad = "Sin edad", talla = "Sin talla", genero = "Sin género", fecha_inicio = "Sin fecha", foto = null }) {
     this.id = id;
     this.nombre = nombre;
     this.edad = edad;

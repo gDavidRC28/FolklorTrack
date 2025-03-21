@@ -1,12 +1,13 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-native';
+import React from 'react'; 
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import funcionesCrearAlumno from '../viewmodels/funcionesCrearAlumno';
 
 export default function CrearAlumno({ navigation }) {
   const {
-    nombre, genero, edad, talla, fechaInicio, show, setShow,
-    handleChangeText, handleDateChange, agregarAlumno
+    nombre, genero, edad, talla, fechaInicio, fotoUrl, show, setShow,
+    handleChangeText, handleDateChange, seleccionarImagen, promptAsync,
+    agregarAlumno
   } = funcionesCrearAlumno(navigation);
 
   return (
@@ -22,7 +23,6 @@ export default function CrearAlumno({ navigation }) {
           <Text style={styles.subtitulo}>Seleccionar Fecha</Text>
         </TouchableOpacity>
       </View>
-
       {show && <DateTimePicker value={new Date(fechaInicio)} mode="date" display="default" onChange={handleDateChange} />}
 
       <TouchableOpacity style={styles.botonEnviar} onPress={agregarAlumno}>

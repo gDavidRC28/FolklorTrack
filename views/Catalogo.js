@@ -40,8 +40,7 @@ export default function Catalogo(props) {
           <Text style={styles.subtitle}>Información</Text>
         </View>
       </TouchableOpacity>
-
-      {/* Botón de Cerrar Sesión */}
+      
       <TouchableOpacity
         style={styles.logoutButton}
         onPress={() => handleLogout(props.navigation)} 
