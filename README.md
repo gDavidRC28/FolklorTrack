@@ -105,7 +105,7 @@ Contraseña:
 1. Clona el repositorio: `git clone https://github.com/gDavidRC28/FolklorTrack.git`
 2. Instala las dependencias: `yarn install`
 3. Configura tu proyecto de Firebase y actualiza el archivo `firebaseConfig.js` con tus credenciales.
-4. Inicia la aplicación: `expo start`
+4. Inicia la aplicación: `yarn start`
 
 
 
