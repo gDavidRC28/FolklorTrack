@@ -43,33 +43,61 @@ Contraseña:
 * **Expo Image Picker:** Librería para la selección de imágenes desde la galería del dispositivo.
 
 ## Estructura del Proyecto
-├── App.js
+├── App.js<br>
+├── App.json<br>
+├── README.md<br>
+├── firebaseConfig.js<br>
+├── index.js<br>
+├── package-lock.json<br>
+├── package.json<br>
+├── yarn.lock<br>
+├── .gitattributes<br>
+├── .gitignore<br>
+├── assets/<br>
+│   └── ... <br>
+├── models/<br>
+│   ├── ModeloAlumno.js<br>
+│   ├── ModeloCategoria.js<br>
+│   ├── ModeloCrearAlumno.js<br>
+│   ├── ModeloCrearCategoria.js<br>
+│   ├── ModeloCrearEvento.js<br>
+│   ├── ModeloCrearVestuario.js<br>
+│   ├── ModeloDetalleAlumno.js<br>
+│   ├── ModeloDetalleEvento.js<br>
+│   ├── ModeloEvento.js<br>
+│   └── ModeloVestuario.js<br>
+├── navigation/<br>
+│   └── AppNavigator.js<br>
+├── node_modules/<br>
+│   └── ... <br>
+├── services/<br>
+│   ├── ServicioCrearEvento.js<br>
+│   ├── ServicioAlumno.js<br>
+│   ├── ServicioAutenticacion.js<br>
+│   ├── ServicioCategoria.js<br>
+│   ├── ServicioCrearAlumno.js<br>
+│   ├── ServicioCrearCategoria.js<br>
+│   ├── ServicioCrearVestuario.js<br>
+│   ├── ServicioDetalleAlumno.js<br>
+│   ├── ServicioDetalleEvento.js<br>
+│   ├── ServicioEventos.js<br>
+│   └── ServicioVestuario.js<br>
+└── viewmodels/<br>
+├── Autenticacion.js<br>
+├── funcionesAlumnos.js<br>
+├── funcionesApp.js<br>
+├── funcionesCategorias.js<br>
+├── funcionesCrearAlumno.js<br>
+├── funcionesCrearCategoria.js<br>
+├── funcionesCrearEvento.js<br>
+├── funcionesCrearVestuario.js<br>
+├── funcionesDetalleAlumno.js<br>
+├── funcionesDetalleEvento.js<br>
+├── funcionesEventos.js<br>
+├── funcionesLogin.js<br>
+└── funcionesVestuario.js
 
-└── screens
 
-├── DetalleAlumno.js
-
-├── CrearEvento.js
-
-├── Vestuario.js
-
-├── CrearVestuario.js
-
-├── Login.js
-
-├── CrearEstado.js
-
-├── Eventos.js
-
-├── DetalleEvento.js
-
-├── Estados.js
-
-├── CrearAlumno.js
-
-├── Catalogo.js
-
-└── Alumnos.js
 
 
 ## Instalación
