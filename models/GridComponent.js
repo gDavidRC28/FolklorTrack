@@ -1,21 +1,33 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import CardComponent from './CardComponent'; 
+import { View, StyleSheet, FlatList } from 'react-native'; 
+import CardComponent from './CardComponent';
 
-const GridComponent = ({ categorias, navigation }) => (
-  <View style={styles.grid}>
-    {categorias.map((categoria) => (
-      <CardComponent key={categoria.id} estado={categoria.estado} navigation={navigation} />
-    ))}
-  </View>
-);
+const GridComponent = ({ regiones, navigation }) => { 
+  if (!regiones || regiones.length === 0) {
+    return null; 
+  }
+
+  return (
+    <FlatList
+      data={regiones}
+      renderItem={({ item }) => (
+        <CardComponent region={item} navigation={navigation} /> 
+      )}
+      keyExtractor={(item) => item.id.toString()}
+      numColumns={2} 
+      columnWrapperStyle={styles.row} 
+      contentContainerStyle={styles.gridContainer}
+    />
+  );
+};
 
 const styles = StyleSheet.create({
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+  gridContainer: {
+    paddingHorizontal: 5, 
+  },
+  row: {
+    flex: 1,
+    justifyContent: 'space-around',
   },
 });
 

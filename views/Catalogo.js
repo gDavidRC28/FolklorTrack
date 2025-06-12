@@ -8,11 +8,11 @@ export default function Catalogo(props) {
       {/* Catálogo */}
       <TouchableOpacity
         style={[styles.card, { backgroundColor: "#D9EFFF" }]}
-        onPress={() => props.navigation.navigate('Categorias')}
+        onPress={() => props.navigation.navigate('Regiones')}
       >
         <Image source={require("../assets/vestuario.png")} style={styles.image} />
         <View style={styles.textContainer}>
-          <Text style={styles.title}>Categorias</Text>
+          <Text style={styles.title}>Regiones</Text>
           <Text style={styles.subtitle}>Información</Text>
         </View>
       </TouchableOpacity>

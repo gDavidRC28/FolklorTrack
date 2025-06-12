@@ -1,4 +1,4 @@
-import React from 'react';
+/*import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import EventComponent from './EventComponent';
 
@@ -16,4 +16,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EvComponent;
+export default EvComponent;*/

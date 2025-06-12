@@ -1,42 +1,85 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+/*import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
-const CardComponent = ({ estado, navigation }) => (
-  <TouchableOpacity
-    style={styles.card}
-    onPress={() => navigation.navigate('Vestuario', { estado })}
-  >
-    <View style={styles.circle}>
-      <Text></Text>
-    </View>
-    <Text style={styles.text}>{estado}</Text>
-  </TouchableOpacity>
-);
+const CardComponent = ({ region, navigation }) => {
+  if (!region) return null;
+
+  const handlePress = () => {
+    console.log("Navegando a Vestuario con region:", region);
+    navigation.navigate('Vestuario', { regionId: region.id, nombreRegion: region.nombre });
+  };
+
+  return (
+    <TouchableOpacity
+      style={styles.card}
+      onPress={handlePress}
+    >
+      <View style={styles.imageContainer}>
+        {region.img_region_url ? (
+          <Image
+            source={{ uri: region.img_region_url }}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        ) : (
+          <View style={styles.placeholderImage}>
+            <Text style={styles.placeholderText}>Sin Imagen</Text>
+          </View>
+        )}
+      </View>
+      <Text style={styles.text}>{region.nombre || 'Sin nombre'}</Text>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    padding: 20,
+    borderRadius: 15, 
+    padding: 10, 
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08, 
+    shadowRadius: 5,
     elevation: 2,
-    width: 150,
-    height: 150,
+    width: '47%', 
+    aspectRatio: 1, 
     marginBottom: 20,
+    justifyContent: 'space-between',
   },
-  circle: {
+  imageContainer: {
+    width: '90%',
+    aspectRatio: 1, 
+    borderRadius: 70, 
+    overflow: 'hidden', 
+    backgroundColor: '#f0f0f0',
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 8,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  placeholderImage: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e9ecef'
+  },
+  placeholderText: {
+    color: '#adb5bd',
+    fontSize: 12,
   },
   text: {
-    fontSize: 16,
-    color: '#333333',
+    fontSize: 14,
+    color: '#343a40',
     textAlign: 'center',
+    fontWeight: '500',
+    marginTop: 5, 
   },
 });
 
-export default CardComponent;
+export default CardComponent;*/

@@ -1,60 +1,96 @@
-import { useState } from 'react';
-import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
-import appFirebase from '../firebaseConfig';
+/*import { useState, useCallback } from 'react';
+import { supabase } from '../supabaseClient'; 
 import ModeloVestuario from '../models/ModeloVestuario';
 
-const db = getFirestore(appFirebase);
-
-const obtenerVestuario = async (estado) => {
+const obtenerVestuarios = async (regionId) => {
+  if (!regionId) {
+    console.warn("obtenerVestuarios llamado sin regionId");
+    return [];
+  }
   try {
-    const vestuariosCollection = collection(db, 'Vestuario');
-    const q = query(vestuariosCollection, where('estado', '==', estado));
-    const snapshot = await getDocs(q);
+    const { data, error } = await supabase
+      .from('vestuarios')
+      .select('id, tipo, talla, genero, disponible, region_id, vestuario_img_url, folio') 
+      .eq('region_id', regionId) 
+      .order('tipo', { ascending: true });
 
-    return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      disponibilidad: doc.data().disponibilidad || false,
-      genero: doc.data().genero || 'Sin género',
-      talla: doc.data().talla || 'Sin talla',
-      tipo: doc.data().tipo || 'Sin tipo',
-    }));
+    if (error) {
+      console.error('Error al obtener vestuarios por región:', error.message);
+      throw error;
+    }
+
+    return (data || []).map((item) => new ModeloVestuario(item));
   } catch (error) {
-    console.error('Error al obtener vestuarios:', error.message);
     throw error;
   }
 };
 
-const obtenerVestuarioDisponible = async (id, disponibilidad) => {
+const actualizarDisponibilidad = async (vestuarioId, nuevaDisponibilidad) => {
   try {
-    const vestuarioRef = doc(db, 'Vestuario', id);
-    await updateDoc(vestuarioRef, { disponibilidad: !disponibilidad });
-    return !disponibilidad;
+    const { data, error } = await supabase
+      .from('vestuarios')
+      .update({ disponible: nuevaDisponibilidad })
+      .eq('id', vestuarioId)
+      .select() 
+      .single(); 
+
+    if (error) {
+      console.error('Error al actualizar disponibilidad', error.message);
+      throw error;
+    }
+    return data; 
   } catch (error) {
-    console.error('Error al actualizar disponibilidad:', error.message);
     throw error;
   }
 };
 
-export default function funcionesVestuario(estado) {
+export default function FuncionesVestuarios(regionIdParam) { 
   const [vestuarios, setVestuarios] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [fetchError, setFetchError] = useState(null);
 
-  const cargarVestuario = async () => {
+  const cargarVestuarios = useCallback(async () => {
+    if (!regionIdParam) {
+        setVestuarios([]);
+        setFetchError("ID de región no proporcionado.");
+        return;
+    }
+    if (loading && vestuarios.length > 0) return;
+    setLoading(true);
+    setFetchError(null);
     try {
-      const data = await obtenerVestuario(estado);
-      setVestuarios(data.map(v => new ModeloVestuario(v)));
+      const vestuariosData = await obtenerVestuarios(regionIdParam);
+      setVestuarios(vestuariosData);
     } catch (error) {
-      console.error('Error al obtener vestuario:', error.message);
+      console.error(`Error cargando vestuarios para region ${regionIdParam}:`, error.message);
+      setFetchError(error.message);
+      setVestuarios([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [regionIdParam, loading, vestuarios.length]); 
+
+  const toggleDisponibilidadVestuario = async (vestuarioId, currentDisponibilidad) => {
+    try {
+      const nuevaDisponibilidad = !currentDisponibilidad;
+      const vestuarioActualizado = await actualizarDisponibilidad(vestuarioId, nuevaDisponibilidad);
+      if (vestuarioActualizado) {
+        setVestuarios((prevVestuarios) =>
+          prevVestuarios.map((v) =>
+            v.id === vestuarioId ? { ...v, disponible: nuevaDisponibilidad } : v
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error en toggleDisponibilidadVestuario:', error.message);
     }
   };
 
-  const actualizarDisponibilidad = async (id, currentDisponibilidad) => {
-    try {
-      const newDisponibilidad = await obtenerVestuarioDisponible(id, currentDisponibilidad);
-      setVestuarios(prev => prev.map(v => v.id === id ? { ...v, disponibilidad: newDisponibilidad } : v));
-    } catch (error) {
-      console.error('Error al actualizar disponibilidad:', error.message);
-    }
+  return {
+    vestuarios,
+    loading,
+    fetchError,
+    cargarVestuarios,
+    toggleDisponibilidadVestuario,
   };
-
-  return { vestuarios, cargarVestuario, actualizarDisponibilidad };
-}
+}*/

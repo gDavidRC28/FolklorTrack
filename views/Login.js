@@ -1,9 +1,9 @@
 import React from "react";
-import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, ActivityIndicator } from "react-native";
 import funcionesLogin from "../viewmodels/funcionesLogin";
 
 export default function Login({ navigation }) {
-  const { email, setEmail, password, setPassword, handleLogin } = funcionesLogin(navigation);
+  const { email, setEmail, password, setPassword, handleLogin, loading } = funcionesLogin(navigation);
 
   return (
     <View style={styles.container}>
@@ -12,21 +12,23 @@ export default function Login({ navigation }) {
       <TextInput
         style={styles.input}
         placeholder="Correo electrónico"
-        placeholderTextColor="#A9A9A9"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
+        editable={!loading}
       />
       <TextInput
         style={styles.input}
         placeholder="Contraseña"
-        placeholderTextColor="#A9A9A9"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
+        editable={!loading} 
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Ingresar</Text>
+      <TouchableOpacity
+        style={[styles.button, loading && styles.buttonDisabled]} 
+        onPress={handleLogin}
+        disabled={loading} 
+      >
+        {loading ? (
+          <ActivityIndicator color="#FFFFFF" /> 
+        ) : (
+          <Text style={styles.buttonText}>Ingresar</Text> 
+        )}
       </TouchableOpacity>
     </View>
   );

@@ -1,24 +1,22 @@
-import { useState } from 'react';
-import { Alert } from 'react-native';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
-import appFirebase from '../firebaseConfig';
-import ModeloEvento from '../models/ModeloEvento';
-
-const db = getFirestore(appFirebase);
+/*import { useState } from 'react';
+import { Alert, Platform } from 'react-native';
+import { supabase } from '../supabaseClient';
 
 const ServicioCrearEvento = {
-  addEvento: async (evento) => {
+  addEvento: async (AgregarEvento) => {
     try {
-      const eventosCollection = collection(db, 'Eventos');
-      await addDoc(eventosCollection, {
-        Titulo: evento.titulo,
-        Detalles: evento.detalles,
-        Fecha: evento.fecha,
-        Lugar: evento.lugar,
-      });
+      const { data, error } = await supabase
+        .from('eventos')
+        .insert([AgregarEvento]) 
+        .select(); 
+
+      if (error) {
+        console.error('Error al guardar evento en Supabase:', error.message);
+        throw error;
+      }
+      console.log('Evento guardado:', data);
       return true;
     } catch (error) {
-      console.error('Error al guardar evento:', error.message);
       return false;
     }
   },
@@ -27,48 +25,57 @@ const ServicioCrearEvento = {
 export default function FuncionesCrearEvento() {
   const [titulo, setTitulo] = useState('');
   const [detalles, setDetalles] = useState('');
-  const [lugar, setLugar] = useState('');
+  const [lugarNombre, setLugarNombre] = useState('');
+  const [lugarUrl, setLugarUrl] = useState(''); 
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleDateChange = (event, selectedDate) => {
-    setShowDatePicker(false);
+    setShowDatePicker(Platform.OS === 'ios');
     if (selectedDate) {
       setDate(selectedDate);
     }
   };
 
   const handleGuardarEvento = async () => {
-    if (!titulo || !detalles || !lugar) {
-      Alert.alert('Error', 'Por favor, complete todos los campos.');
+    if (!titulo || !detalles || !lugarNombre) {
+      Alert.alert('Error', 'Por favor, complete título, detalles y nombre del lugar.');
       return;
     }
 
-    const evento = new ModeloEvento({ titulo, detalles, fecha: date, lugar });
-    const result = await ServicioCrearEvento.addEvento(evento);
-    if (result) {
-      Alert.alert('Éxito', 'Evento guardado correctamente');
-    } else {
-      Alert.alert('Error', 'No se pudo guardar el evento.');
-    }
+    const eventoParaGuardar = {
+      titulo: titulo,
+      fecha: date.toISOString(),
+      lugar_nombre: lugarNombre,
+      detalles: detalles,
+      lugar_url: lugarUrl || null, 
+    };
 
-    setTitulo('');
-    setLugar('');
-    setDetalles('');
-    setDate(new Date());
+    try {
+      const result = await ServicioCrearEvento.addEvento(eventoParaGuardar);
+      if (result) {
+        Alert.alert('Éxito', 'Evento guardado correctamente');
+        setTitulo('');
+        setLugarNombre('');
+        setDetalles('');
+        setLugarUrl(''); 
+        setDate(new Date());
+      } else {
+        Alert.alert('Error', 'No se pudo guardar el evento. Revise la consola.');
+      }
+    } catch (error) {
+        Alert.alert('Error al guardar', error.message || 'Ocurrió un error desconocido.');
+    }
   };
 
   return {
-    titulo,
-    setTitulo,
-    detalles,
-    setDetalles,
-    lugar,
-    setLugar,
+    titulo, setTitulo,
+    detalles, setDetalles,
+    lugarNombre, setLugarNombre,
+    lugarUrl, setLugarUrl, 
     date,
-    showDatePicker,
-    setShowDatePicker,
+    showDatePicker, setShowDatePicker,
     handleDateChange,
     handleGuardarEvento,
   };
-}
+}*/

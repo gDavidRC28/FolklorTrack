@@ -1,29 +1,32 @@
 import { useState } from "react";
 import { Alert } from "react-native";
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import appFirebase from "../firebaseConfig";
+import { supabase } from "../supabaseClient";
 
 class ServicioAutenticacion {
-  constructor() {
-    this.auth = getAuth(appFirebase);
-  }
 
-  login(email, password) {
-    return signInWithEmailAndPassword(this.auth, email, password);
+  async login(email, password) {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+
+    if (error) {
+      throw error;
+    }
+    return data;
   }
 
   async logout() {
-    try {
-      await signOut(this.auth);
-      return { success: true, message: "Has cerrado sesión exitosamente" };
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-      return { success: false, message: `Código: ${error.code}\nMensaje: ${error.message}` };
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Error al cerrar sesión en Supabase:", error);
+      return { success: false, message: `Error: ${error.message}` };
     }
+    return { success: true, message: "Has cerrado sesión exitosamente" };
   }
 }
 
-// Instancia global para ser usada en cualquier parte de la app
 const servicioAutenticacion = new ServicioAutenticacion();
 
 export const handleLogout = async (navigation) => {
@@ -41,12 +44,17 @@ export default function funcionesLogin(navigation) {
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert("Atención", "Por favor, ingresa correo y contraseña.");
+      return;
+    }
     try {
       await servicioAutenticacion.login(email, password);
       Alert.alert("Bienvenido", "Inicio de sesión exitoso");
       navigation.navigate("Catalogo");
     } catch (error) {
-      Alert.alert("Error", `Código: ${error.code}\nMensaje: ${error.message}`);
+      Alert.alert("Error de inicio de sesión", error.message || "Ocurrió un error desconocido.");
+      console.error("Error en handleLogin:", error);
     }
   };
 

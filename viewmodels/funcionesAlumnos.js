@@ -1,43 +1,51 @@
-import { useState, useEffect } from "react";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
-import appFirebase from "../firebaseConfig";
+import { useState, useEffect, useCallback } from "react";
+import { supabase } from '../supabaseClient'; 
 import Alumno from "../models/ModeloAlumno";
 
-const obtenerAlumnos = async () => {
+const obtenerAlumnosSupabase = async () => {
   try {
-    const db = getFirestore(appFirebase);
-    const alumnosCollection = collection(db, "Alumnos");
-    const snapshot = await getDocs(alumnosCollection);
-    return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const { data, error } = await supabase
+      .from('alumnos')
+      .select('id, nombre_alumno, talla, genero, fecha_inicio, fecha_nacimiento, foto_url, user_id')
+      .order('nombre_alumno', { ascending: true });
+
+    if (error) {
+      console.error("Error al obtener alumnos de Supabase:", error.message);
+      throw error;
+    }
+    return (data || []).map((item) => new Alumno(item));
   } catch (error) {
-    console.error("Error al obtener alumnos:", error);
     throw error;
   }
 };
 
-const useAlumnos = () => {
+export default function UseAlumnos() { 
   const [alumnos, setAlumnos] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); 
+  const [fetchError, setFetchError] = useState(null);
 
-  useEffect(() => {
-    const cargarAlumnos = async () => {
-      try {
-        const datos = await obtenerAlumnos();
-        setAlumnos(datos.map((item) => new Alumno(item)));
-      } catch (error) {
-        console.error("Error cargando alumnos:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    cargarAlumnos();
+  const cargarAlumnos = useCallback(async () => {
+    setLoading(true);
+    setFetchError(null);
+    try {
+      const datosAlumnos = await obtenerAlumnosSupabase();
+      setAlumnos(datosAlumnos); 
+    } catch (error) {
+      console.error("Error cargando alumnos:", error.message);
+      setFetchError(error.message);
+      setAlumnos([]);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { alumnos, loading };
-};
+  useEffect(() => {
+    cargarAlumnos(); 
+  }, [cargarAlumnos]); 
 
-export default useAlumnos;
+  return { 
+    alumnos,
+    loading,
+    fetchError,
+    refrescarAlumnos: cargarAlumnos }; 
+}

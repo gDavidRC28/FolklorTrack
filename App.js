@@ -1,9 +1,9 @@
 import React from 'react';
 import AppNavigator from './navigation/AppNavigator';
-import funcionesApp from './viewmodels/funcionesApp';
+import funcionesLogin from './viewmodels/funcionesLogin';
 
 export default function App() {
-  funcionesApp(); //Permisos
+  funcionesLogin(); 
 
   return <AppNavigator />;
 }

@@ -1,29 +1,115 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
-import funcionesVestuario from '../viewmodels/funcionesVestuario';
-import VestComponent from '../models/VestComponent'; 
+/*import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, RefreshControl, Alert } from 'react-native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'; 
+import FuncionesVestuarios from '../viewmodels/funcionesVestuario'; 
+import VestComponent from '../models/VestComponent';
 
-export default function Vestuario({ route, navigation }) {
-  const { estado } = route.params;
-  const { vestuarios, cargarVestuario, actualizarDisponibilidad } = funcionesVestuario(estado);
+export default function Vestuario() { 
+  const navigation = useNavigation();
+  const route = useRoute();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      cargarVestuario();
-    }, [estado])
-  );
+  const { regionId, nombreRegion } = route.params || {};
+
+  const {
+    vestuarios,
+    loading,
+    fetchError,
+    cargarVestuarios,
+    toggleDisponibilidadVestuario,
+  } = FuncionesVestuarios(regionId);
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const handleLoadVestuarios = React.useCallback(() => {
+    if (regionId) { 
+      cargarVestuarios();
+    } else {
+      console.warn("Pantalla de Vestuario cargada sin regionId.");
+    }
+  }, [cargarVestuarios, regionId]); 
+
+  useFocusEffect(handleLoadVestuarios);
+
+  const onRefresh = React.useCallback(async () => {
+    if (!regionId) {
+        setRefreshing(false); 
+        return;
+    }
+    setRefreshing(true);
+    await cargarVestuarios();
+    setRefreshing(false);
+  }, [cargarVestuarios, regionId]);
+
+  if (!regionId && !loading) {
+    return (
+        <View style={[styles.container, styles.centered]}>
+            <Text style={styles.errorText}>No se especificó una región.</Text>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.buttonGeneric}>
+                <Text style={styles.buttonText}>Volver a Regiones</Text>
+            </TouchableOpacity>
+        </View>
+    );
+  }
+
+  if (loading && !refreshing && vestuarios.length === 0) {
+    return (
+      <View style={[styles.container, styles.centered]}>
+        <ActivityIndicator size="large" color="#007BFF" />
+        <Text style={styles.messageText}>Cargando vestuarios para {nombreRegion || 'la región'}...</Text>
+      </View>
+    );
+  }
+
+  if (fetchError && vestuarios.length === 0 && !loading) {
+    return (
+      <View style={[styles.container, styles.centered]}>
+        <Text style={styles.errorText}>Error al cargar vestuarios: {fetchError}</Text>
+        <TouchableOpacity style={styles.buttonGeneric} onPress={handleLoadVestuarios}>
+            <Text style={styles.buttonText}>Reintentar</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Vestuario en {estado}</Text>
-      <View style={styles.grid}>
-        {vestuarios.map((vestuario) => (
-          <VestComponent key={vestuario.id} vestuario={vestuario} actualizarDisponibilidad={actualizarDisponibilidad} />
-        ))}
-      </View>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CrearVestuario', { estado })}>
-        <Text style={styles.buttonText}>Agregar Vestuario</Text>
+      <Text style={styles.title}>
+        Vestuarios de {nombreRegion || 'Región Desconocida'}
+      </Text>
+      {vestuarios.length === 0 && !loading && !fetchError ? ( 
+        <View style={[styles.centered, styles.fullHeightCentered]}>
+            <Text style={styles.messageText}>No hay vestuarios registrados para esta región.</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={vestuarios}
+          renderItem={({ item }) => (
+            <VestComponent
+              vestuario={item}
+              onToggleDisponibilidad={toggleDisponibilidadVestuario} 
+            />
+          )}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          columnWrapperStyle={styles.rowStyle}
+          contentContainerStyle={styles.listContentContainer}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={["#007BFF"]}/>
+          }
+        />
+      )}
+      <TouchableOpacity
+        style={styles.buttonAdd}
+        onPress={() => {
+            if (regionId && nombreRegion) {
+                navigation.navigate('CrearVestuario', { regionId, nombreRegion });
+            } else {
+                Alert.alert("Error de Navegación", "No se pudo determinar la región para crear un nuevo vestuario.");
+            }
+        }}
+      >
+        <Text style={styles.buttonText}>+ Agregar Vestuario</Text>
       </TouchableOpacity>
     </View>
   );
@@ -32,33 +118,78 @@ export default function Vestuario({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
-    paddingTop: 20,
-    paddingHorizontal: 20,
+    backgroundColor: '#F4F6F8',
   },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  button: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#007BFF',
+  centered: { 
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
-    marginTop: 20,
+    padding: 20,
   },
-  buttonText: {
+  fullHeightCentered: { 
+    flex: 1,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    paddingVertical: 16, 
+    paddingHorizontal: 20,
+    textAlign: 'center',
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ecf0f1',
+  },
+  rowStyle: { 
+    justifyContent: 'space-between',
+    paddingHorizontal: 10, 
+  },
+  listContentContainer: { 
+    paddingTop: 10,
+    paddingBottom: 90, 
+  },
+  messageText: {
+    fontSize: 16,
+    color: '#7f8c8d',
+    textAlign: 'center',
+  },
+  messageSubText: {
+    fontSize: 14,
+    color: '#95a5a6',
+    textAlign: 'center',
+    marginTop: 5,
+  },
+  errorText: {
+    fontSize: 16,
+    color: '#e74c3c', 
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  buttonAdd: {
+    position: 'absolute',
+    bottom: 25, 
+    right: 25,
+    backgroundColor: '#007BFF',
+    width: 60, 
+    height: 60,
+    borderRadius: 30, 
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  buttonGeneric: {
+    backgroundColor: '#3498db',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  buttonText: { 
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
   },
-});
+});*/
