@@ -19,12 +19,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.carlosemmanuel.FolklorTrack"
     },
     "web": {
       "favicon": "./assets/icon.png"
     },
-   "plugins": [
+    "plugins": [
       [
         "expo-image-picker",
         {
@@ -32,6 +36,11 @@
           "cameraPermission": "La app necesita acceso a tu cámara si deseas tomar una foto para la región."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "17e90951-eae1-4d68-9fde-9d1aa5b77d1c"
+      }
+    }
   }
 }
